@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compte à rebours Retour vers le futur</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      background-color: #000;
+      background-image: radial-gradient(#0055aa 1px, transparent 1px);
+      background-size: 30px 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: 'Orbitron', sans-serif;
+      color: #fff;
+      overflow-x: hidden;
+      padding: 20px;
+    }
+    
+    .time-machine {
+      background-color: #333;
+      width: 100%;
+      max-width: 700px;
+      border-radius: 15px;
+      border: 8px solid #777;
+      padding: 20px;
+      box-shadow: 
+        0 0 30px #00aaff,
+        inset 0 0 20px rgba(0, 170, 255, 0.4);
+      position: relative;
+    }
+    
+    .machine-header {
+      text-align: center;
+      margin-bottom: 15px;
+      font-size: clamp(18px, 5vw, 24px);
+      color: #00aaff;
+      text-shadow: 0 0 10px #00aaff;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      border-bottom: 2px solid #00aaff;
+      padding-bottom: 10px;
+    }
+    
+    .time-display {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      gap: 10px;
+    }
+    
+    .time-unit {
+      flex: 1 1 150px;
+      min-width: 70px;
+      background-color: #000;
+      padding: 15px 0;
+      border-radius: 8px;
+      border: 3px solid #777;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    @media (max-width: 600px) {
+      .time-unit {
+        flex: 1 1 40%;
+      }
+    }
+    
+    @media (max-width: 400px) {
+      .time-unit {
+        flex: 1 1 100%;
+      }
+    }
+    
+    .time-unit::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 50%;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.1), transparent);
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+    }
+    
+    .time-label {
+      text-align: center;
+      font-size: clamp(10px, 3vw, 12px);
+      text-transform: uppercase;
+      color: #00aaff;
+      margin-bottom: 5px;
+      letter-spacing: 1px;
+      text-shadow: 0 0 5px #00aaff;
+    }
+    
+    .time-value {
+      text-align: center;
+      font-size: clamp(24px, 6vw, 36px);
+      font-weight: bold;
+      color: #ff6600;
+      text-shadow: 0 0 10px #ff6600;
+    }
+    
+    .destination {
+      background-color: #000;
+      border: 3px solid #777;
+      border-radius: 8px;
+      padding: 15px 10px;
+      margin-top: 20px;
+      position: relative;
+      text-align: center;
+    }
+    
+    .destination-label {
+      position: absolute;
+      top: -10px;
+      left: 10px;
+      background-color: #333;
+      padding: 0 10px;
+      font-size: clamp(10px, 3vw, 12px);
+      text-transform: uppercase;
+      color: #00aaff;
+      text-shadow: 0 0 5px #00aaff;
+    }
+    
+    .destination-date {
+      font-size: clamp(14px, 4vw, 18px);
+      color: #ff6600;
+      text-shadow: 0 0 8px #ff6600;
+      letter-spacing: 1px;
+      word-wrap: break-word;
+    }
+    
+    .flux-capacitor {
+      position: relative;
+      width: 80px;
+      height: 80px;
+      background-color: #222;
+      border: 3px solid #777;
+      border-radius: 10px;
+      margin: 20px auto 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 0 10px #00aaff;
+    }
+    
+    @media (min-width: 600px) {
+      .flux-capacitor {
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+      }
+    }
+    
+    .flux-dot {
+      width: 10px;
+      height: 10px;
+      background-color: #00aaff;
+      border-radius: 50%;
+      margin: 2px;
+      box-shadow: 0 0 10px #00aaff;
+      animation: pulse 1.5s infinite alternate;
+    }
+    
+    .flux-center {
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      background-color: #ff6600;
+      border-radius: 50%;
+      box-shadow: 0 0 15px #ff6600;
+      animation: pulse 1s infinite alternate;
+    }
+    
+    .flux-horizontal, .flux-vertical {
+      position: absolute;
+      background-color: #333;
+      box-shadow: 0 0 5px rgba(0, 170, 255, 0.5);
+    }
+    
+    .flux-horizontal {
+      width: 60px;
+      height: 2px;
+    }
+    
+    .flux-vertical {
+      width: 2px;
+      height: 60px;
+    }
+    
+    @keyframes pulse {
+      0% { opacity: 0.5; box-shadow: 0 0 5px currentColor; }
+      100% { opacity: 1; box-shadow: 0 0 20px currentColor; }
+    }
+    
+    .wires {
+      display: none;
+    }
+    
+    @media (min-width: 600px) {
+      .wires {
+        display: block;
+        position: absolute;
+        height: 8px;
+        background-color: #555;
+        border-radius: 4px;
+        z-index: -1;
+      }
+      
+      .wire1 {
+        width: 120px;
+        top: 50px;
+        left: -40px;
+        transform: rotate(45deg);
+        background-color: #ff6600;
+      }
+      
+      .wire2 {
+        width: 100px;
+        bottom: 70px;
+        right: -20px;
+        transform: rotate(-30deg);
+        background-color: #00aaff;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="time-machine">
+    <div class="machine-header">Circuit temporel</div>
+    
+    <div class="time-display">
+      <div class="time-unit">
+        <div class="time-label">Jours</div>
+        <div class="time-value" id="days">00</div>
+      </div>
+      
+      <div class="time-unit">
+        <div class="time-label">Heures</div>
+        <div class="time-value" id="hours">00</div>
+      </div>
+      
+      <div class="time-unit">
+        <div class="time-label">Minutes</div>
+        <div class="time-value" id="minutes">00</div>
+      </div>
+      
+      <div class="time-unit">
+        <div class="time-label">Secondes</div>
+        <div class="time-value" id="seconds">00</div>
+      </div>
+    </div>
+    
+    <div class="destination">
+      <div class="destination-label">Destination temporelle</div>
+      <div class="destination-date" id="target-date">SAMEDI 00 XXX 20XX 15:00</div>
+    </div>
+    
+    <div class="flux-capacitor">
+      <div class="flux-horizontal"></div>
+      <div class="flux-vertical"></div>
+      <div class="flux-center"></div>
+      <div class="flux-dot" style="transform: translate(-20px, -20px);"></div>
+      <div class="flux-dot" style="transform: translate(20px, -20px);"></div>
+      <div class="flux-dot" style="transform: translate(0, 25px);"></div>
+    </div>
+    
+    <div class="wires wire1"></div>
+    <div class="wires wire2"></div>
+  </div>
+
+  <script>
+    // Calcul de la date cible (samedi prochain à 15h)
+    function obtenirSamediProchain() {
+      const aujourdHui = new Date();
+      const jourActuel = aujourdHui.getDay(); // 0 = Dimanche, 6 = Samedi
+      const joursJusquaSamedi = jourActuel === 6 ? 7 : 6 - jourActuel;
+      
+      const samediProchain = new Date(aujourdHui);
+      samediProchain.setDate(aujourdHui.getDate() + joursJusquaSamedi);
+      samediProchain.setHours(15, 0, 0, 0);
+      
+      return samediProchain;
+    }
+    
+    const dateCible = obtenirSamediProchain();
+    
+    // Formater et afficher la date cible dans le style Retour vers le futur
+    const mois = ["JAN", "FEV", "MAR", "AVR", "MAI", "JUN", "JUL", "AOU", "SEP", "OCT", "NOV", "DEC"];
+    const jour = dateCible.getDate().toString().padStart(2, '0');
+    const moisFormat = mois[dateCible.getMonth()];
+    const annee = dateCible.getFullYear();
+    
+    document.getElementById('target-date').textContent = 
+      `SAMEDI ${jour} ${moisFormat} ${annee} 15:00`;
+    
+    // Fonction de mise à jour du compte à rebours
+    function mettreAJourCompteARebours() {
+      const maintenant = new Date();
+      const difference = dateCible - maintenant;
+      
+      if (difference <= 0) {
+        // Le compte à rebours est terminé
+        document.getElementById('days').textContent = "00";
+        document.getElementById('hours').textContent = "00";
+        document.getElementById('minutes').textContent = "00";
+        document.getElementById('seconds').textContent = "00";
+        document.querySelector('.machine-header').textContent = "DESTINATION ATTEINTE";
+        document.querySelector('.machine-header').style.color = "#ff6600";
+        return;
+      }
+      
+      // Calcul des jours, heures, minutes et secondes
+      const jours = Math.floor(difference / (1000 * 60 * 60 * 24));
+      const heures = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+      const secondes = Math.floor((difference % (1000 * 60)) / 1000);
+      
+      // Mettre à jour l'affichage
+      document.getElementById('days').textContent = jours.toString().padStart(2, '0');
+      document.getElementById('hours').textContent = heures.toString().padStart(2, '0');
+      document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+      document.getElementById('seconds').textContent = secondes.toString().padStart(2, '0');
+    }
+    
+    // Initialiser et mettre à jour le compte à rebours chaque seconde
+    mettreAJourCompteARebours();
+    setInterval(mettreAJourCompteARebours, 1000);
+  </script>
+</body>
+</html>
