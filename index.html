@@ -237,13 +237,26 @@
         background-color: #00aaff;
       }
     }
+    
+    /* Style pour le GIF */
+    .gif-container {
+      display: none;
+      text-align: center;
+      margin-top: 20px;
+    }
+    
+    .gif-container img {
+      max-width: 100%;
+      border-radius: 10px;
+      box-shadow: 0 0 30px #ff6600;
+    }
   </style>
 </head>
 <body>
   <div class="time-machine">
     <div class="machine-header">Circuit temporel</div>
     
-    <div class="time-display">
+    <div class="time-display" id="countdown-display">
       <div class="time-unit">
         <div class="time-label">Jours</div>
         <div class="time-value" id="days">00</div>
@@ -263,6 +276,11 @@
         <div class="time-label">Secondes</div>
         <div class="time-value" id="seconds">00</div>
       </div>
+    </div>
+    
+    <!-- Container pour le GIF -->
+    <div class="gif-container" id="gif-container">
+      <img src="./les-tuche-jeff-tuche.gif" alt="Les Tuches GIF">
     </div>
     
     <div class="destination">
@@ -297,7 +315,16 @@
       return samediProchain;
     }
     
+    // Pour les tests, définir une date plus proche (30 secondes dans le futur)
+    function obtenirDateTest() {
+      const date = new Date();
+      date.setSeconds(date.getSeconds() + 30);
+      return date;
+    }
+    
+    // Choisir la date cible (décommenter la ligne avec obtenirDateTest() pour tester)
     const dateCible = obtenirSamediProchain();
+    // const dateCible = obtenirDateTest(); // Pour tester avec un délai court
     
     // Formater et afficher la date cible dans le style Retour vers le futur
     const mois = ["JAN", "FEV", "MAR", "AVR", "MAI", "JUN", "JUL", "AOU", "SEP", "OCT", "NOV", "DEC"];
@@ -321,6 +348,11 @@
         document.getElementById('seconds').textContent = "00";
         document.querySelector('.machine-header').textContent = "DESTINATION ATTEINTE";
         document.querySelector('.machine-header').style.color = "#ff6600";
+        
+        // Afficher le GIF et masquer l'affichage du compte à rebours
+        document.getElementById('countdown-display').style.display = "none";
+        document.getElementById('gif-container').style.display = "block";
+        
         return;
       }
       
