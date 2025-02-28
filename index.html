@@ -280,12 +280,12 @@
     
     <!-- Container pour le GIF -->
     <div class="gif-container" id="gif-container">
-      <img src="./les-tuche-jeff-tuche.gif" alt="Les Tuches GIF">
+      <img src="/api/placeholder/400/320" alt="GIF Destination Atteinte">
     </div>
     
     <div class="destination">
       <div class="destination-label">Destination temporelle</div>
-      <div class="destination-date" id="target-date">SAMEDI 00 XXX 20XX 15:00</div>
+      <div class="destination-date" id="target-date">SAMEDI 01 MAR 2025 15:30</div>
     </div>
     
     <div class="flux-capacitor">
@@ -302,38 +302,19 @@
   </div>
 
   <script>
-    // Calcul de la date cible (samedi prochain à 15h)
-    function obtenirSamediProchain() {
-      const aujourdHui = new Date();
-      const jourActuel = aujourdHui.getDay(); // 0 = Dimanche, 6 = Samedi
-      const joursJusquaSamedi = jourActuel === 6 ? 7 : 6 - jourActuel;
-      
-      const samediProchain = new Date(aujourdHui);
-      samediProchain.setDate(aujourdHui.getDate() + joursJusquaSamedi);
-      samediProchain.setHours(15, 0, 0, 0);
-      
-      return samediProchain;
-    }
-    
-    // Pour les tests, définir une date plus proche (30 secondes dans le futur)
-    function obtenirDateTest() {
-      const date = new Date();
-      date.setSeconds(date.getSeconds() + 30);
-      return date;
-    }
-    
-    // Choisir la date cible (décommenter la ligne avec obtenirDateTest() pour tester)
-    const dateCible = obtenirSamediProchain();
-    // const dateCible = obtenirDateTest(); // Pour tester avec un délai court
+    // Date cible fixe: 1er mars 2025 à 15h30
+    const dateCible = new Date(2025, 2, 1, 15, 30, 0); // Mois de 0 à 11, donc 2 = mars
     
     // Formater et afficher la date cible dans le style Retour vers le futur
     const mois = ["JAN", "FEV", "MAR", "AVR", "MAI", "JUN", "JUL", "AOU", "SEP", "OCT", "NOV", "DEC"];
     const jour = dateCible.getDate().toString().padStart(2, '0');
     const moisFormat = mois[dateCible.getMonth()];
     const annee = dateCible.getFullYear();
+    const heure = dateCible.getHours().toString().padStart(2, '0');
+    const minute = dateCible.getMinutes().toString().padStart(2, '0');
     
     document.getElementById('target-date').textContent = 
-      `SAMEDI ${jour} ${moisFormat} ${annee} 15:00`;
+      `SAMEDI ${jour} ${moisFormat} ${annee} ${heure}:${minute}`;
     
     // Fonction de mise à jour du compte à rebours
     function mettreAJourCompteARebours() {
